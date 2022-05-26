@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EWADotnet", "EWADotnet\EWADotnet.csproj", "{B2FD71B3-5260-4E6D-B30D-1985143AF525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EWA.Sugar", "EWA.Sugar\EWA.Sugar.csproj", "{638204E0-6AD3-401E-99F0-63DF14A9870A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2FD71B3-5260-4E6D-B30D-1985143AF525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FD71B3-5260-4E6D-B30D-1985143AF525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FD71B3-5260-4E6D-B30D-1985143AF525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FD71B3-5260-4E6D-B30D-1985143AF525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{638204E0-6AD3-401E-99F0-63DF14A9870A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{638204E0-6AD3-401E-99F0-63DF14A9870A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{638204E0-6AD3-401E-99F0-63DF14A9870A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{638204E0-6AD3-401E-99F0-63DF14A9870A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94E419CA-5B15-47E4-B91C-D96A1F4A5F49}
+	EndGlobalSection
+EndGlobal

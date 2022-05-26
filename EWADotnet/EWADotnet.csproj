@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Furion" Version="3.3.0" />
+    <PackageReference Include="Furion.Extras.Authentication.JwtBearer" Version="3.3.0" />
+    <PackageReference Include="Furion.Extras.DatabaseAccessor.SqlSugar" Version="3.3.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EWA.Sugar\EWA.Sugar.csproj" />
+  </ItemGroup>
+
+</Project>
