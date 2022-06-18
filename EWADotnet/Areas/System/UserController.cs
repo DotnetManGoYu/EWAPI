@@ -22,7 +22,6 @@ namespace EWADotnet.Areas.System
         /// <returns></returns>
         public async Task<CommonPageResult> GetPage([FromQuery] SysUser input)
         {
-            var aaa = LoginUser.tenantId;
             var express = Expressionable.Create<SysUser, SysDictionaryData, SysDictionary>();
             express.And((x, y, z) => x.userId != LoginUser.userId);//排除下自身，防止自己把自己禁用了
             express.And((x, y, z) => x.deleted == 0 && x.tenantId == LoginUser.tenantId && z.dictCode == "sex");
@@ -81,6 +80,67 @@ namespace EWADotnet.Areas.System
         }
 
         /// <summary>
+        /// 新增用户
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [PreAuthorize("sys:user:save")]
+        public async Task<CommonResult> Post(SysUser input)
+        {
+            input.status = 0;
+            input.createTime = DateTime.Now;
+            input.password = UtilHelper.BCryptPasswordEncoder(input.password);
+            input.tenantId = LoginUser.tenantId;
+
+            var exp = Expressionable.Create<SysUser>();
+            exp.And(x => x.userId != input.userId
+            && x.tenantId == LoginUser.tenantId
+            && x.deleted == 0
+            && x.username == input.username);
+
+            var exist = await db.Queryable<SysUser>().Where(exp.ToExpression()).AnyAsync();
+            if (exist)
+            {
+                return Result.Error("账号已存在！");
+            }
+            var userRoles = new List<SysUserRole>();
+            input.roles?.ForEach(x =>
+            {
+                userRoles.Add(new SysUserRole()
+                {
+                    userId = input.userId,
+                    roleId = x.roleId,
+                    tenantId = input.tenantId,
+                    createTime = DateTime.Now,
+                    updateTime = DateTime.Now
+                });
+            });
+            try
+            {
+                db.Ado.BeginTran();
+                db.Insertable(input).InsertColumns(x => new
+                {
+                    x.email,
+                    x.introduction,
+                    x.nickname,
+                    x.password,
+                    x.phone,
+                    x.sex,
+                    x.username,
+                    x.tenantId
+                }).ExecuteCommand();//新增用户信息
+                db.Insertable(userRoles).ExecuteCommand();
+                db.Ado.CommitTran();
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                db.Ado.RollbackTran();
+                return Result.Error(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 修改用户状态
         /// </summary>
         /// <param name="input"></param>
@@ -106,7 +166,7 @@ namespace EWADotnet.Areas.System
             var exist = await db.Queryable<SysUser>().Where(exp.ToExpression()).AnyAsync();
             if (exist)
             {
-                return Result.Error("账号，手机号或邮箱号已存在！");
+                return Result.Error("账号、手机号或邮箱号已存在！");
             }
             var userRoles = new List<SysUserRole>();
             input.roles?.ForEach(x =>
@@ -166,12 +226,29 @@ namespace EWADotnet.Areas.System
             return Result.Success(input.value + "已存在！");
         }
 
+
         [PreAuthorize("sys:user:list")]
         public async Task<CommonResult> Get([FromRoute] int id)
         {
             var model = await db.Queryable<SysUser>().Where(x => x.tenantId == LoginUser.tenantId && x.userId == id).FirstAsync();
             model = SelectRoleAndAuth(model);
             return Result.Success(model);
+        }
+
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        [PreAuthorize("sys:role:remove")]
+        public async Task<CommonResult> DeleteBatch([FromBody] List<int> ids)
+        {
+            var rows = await db.Updateable<SysUser>()
+                .SetColumns(x => new SysUser() { deleted = 1, updateTime = DateTime.Now })
+                .Where(x => x.tenantId == LoginUser.tenantId && ids.Contains(x.userId))
+                .ExecuteCommandAsync();
+            return Result.Judge(rows > 0);
         }
 
     }

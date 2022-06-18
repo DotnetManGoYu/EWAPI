@@ -78,6 +78,7 @@ namespace EWADotnet.Areas.System
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
+        [PreAuthorize("sys:role:remove")]
         public async Task<CommonResult> DeleteBatch([FromBody] List<int> ids)
         {
             var rows = await db.Updateable<SysRole>()

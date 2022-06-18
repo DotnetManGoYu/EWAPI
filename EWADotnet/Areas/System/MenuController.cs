@@ -53,7 +53,7 @@ namespace EWADotnet.Areas.System
         public async Task<CommonResult> Put(SysMenu menu)
         {
             menu.updateTime = DateTime.Now;
-            var row = await db.Updateable(menu).ExecuteCommandAsync();
+            var row = await db.Updateable(menu).IgnoreColumns(x => new { x.createTime, x.tenantId }).ExecuteCommandAsync();
             return Result.Success(row > 0);
         }
 
